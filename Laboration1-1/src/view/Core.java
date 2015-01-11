@@ -25,7 +25,7 @@ public class Core {
 	public void loadResources() {
 		if (texture == null)
 			try {
-				texture = TextureIO.newTexture(new File("redbox.png"), false);
+				texture = TextureIO.newTexture(getClass().getResourceAsStream("/redbox.png"), false, "png");
 			} catch (GLException | IOException e) {
 				e.printStackTrace();
 				System.exit(-1);

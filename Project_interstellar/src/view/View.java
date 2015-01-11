@@ -1,7 +1,7 @@
 package view;
 
 import javax.media.opengl.GLAutoDrawable;
-import model.Model;
+
 
 
 /*
@@ -17,7 +17,7 @@ public class View {
 
 	
 
-	public View(Model model, int width, int height, Input input) {
+	public View(int width, int height, Input input) {
 		this.input = input;
 		camera = new Camera(1.5f, 1.0f);
 	}

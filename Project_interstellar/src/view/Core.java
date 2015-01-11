@@ -2,13 +2,22 @@ package view;
 
 import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_MODELVIEW;
 import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_PROJECTION;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLException;
 import javax.media.opengl.glu.GLU;
+
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
+
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
@@ -17,12 +26,16 @@ import com.jogamp.opengl.util.texture.TextureIO;
 public class Core {
 	
 	private Texture texture;
-	private Texture texture1;
-	private Texture texture2;
-	private Texture texture3;
+	private Texture ball;
+	private Texture rocket;
+	private Texture rocketleftwing;
+	private Texture rocketrightwing;
+	private Texture nextlevel;
+	private Texture intoinfinity;
 	private Texture texture5;
 	private Texture texture6;
 	private Texture menuBackground;
+	private Texture gameoverBackground;
 	private Texture startButton;
 	private Texture startButtonHover;
 	private Texture quitButton;
@@ -44,39 +57,68 @@ public class Core {
 	private Texture infoButton;
 	private Texture mars;
 	private Texture jupiter;
+	private Texture saturnus;
+	private Texture uranus;
+	private Texture neptunus;
+	private Texture pluto;
+	private Texture explosion;
+	private Texture spark;
+	private Texture gameover;
+	private Texture redgameover;
+	private Texture restartButton;
+	private Texture restartButtonHover;
+	private Texture repairkit;
 
-	
+	/*
+	 * To much to comment.
+	 * Basically just methods for draw each object in the game. Also handles the sound effects.
+	 */
 	public void loadResources() {
-		if (texture1 == null)
+		if (rocket == null)
 			try {
-				texture = TextureIO.newTexture(new File("particlesmoke.tga"), false);
-				texture1 = TextureIO.newTexture(new File("rocket.png"), false);
-				texture2 = TextureIO.newTexture(new File("rocketleft.png"), false);
-				texture3 = TextureIO.newTexture(new File("rocketright.png"), false);
-				menuBackground = TextureIO.newTexture(new File("menuBackground.png"), false);
-				startButton = TextureIO.newTexture(new File("newgame.png"), false);
-				startButtonHover = TextureIO.newTexture(new File("newgame_hover.png"), false);
-				quitButton = TextureIO.newTexture(new File("quitgame.png"), false);
-				quitButtonHover = TextureIO.newTexture(new File("quitgame_hover.png"), false);
-				continueButton = TextureIO.newTexture(new File("continue.png"), false);
-				continueButtonHover = TextureIO.newTexture(new File("continue_hover.png"), false);
-				countdown9 = TextureIO.newTexture(new File("9.png"), false);
-				countdown8 = TextureIO.newTexture(new File("8.png"), false);
-				countdown7 = TextureIO.newTexture(new File("7.png"), false);
-				countdown6 = TextureIO.newTexture(new File("6.png"), false);
-				countdown5 = TextureIO.newTexture(new File("5.png"), false);
-				countdown4 = TextureIO.newTexture(new File("4.png"), false);
-				countdown3 = TextureIO.newTexture(new File("3.png"), false);
-				countdown2 = TextureIO.newTexture(new File("2.png"), false);
-				countdown1 = TextureIO.newTexture(new File("1.png"), false);
-				countdown0 = TextureIO.newTexture(new File("0.png"), false);
-				gameInfo = TextureIO.newTexture(new File("game_info.png"), false);
-				infoButton = TextureIO.newTexture(new File("info.png"), false);
-				earthStart = TextureIO.newTexture(new File("earth.png"), false);
-				mars = TextureIO.newTexture(new File("mars.png"), false);
-				jupiter = TextureIO.newTexture(new File("jupiter.png"), false);
-				texture5 = TextureIO.newTexture(new File("star.png"), false);
-				texture6 = TextureIO.newTexture(new File("meteor.png"), false);
+				ball = TextureIO.newTexture(this.getClass().getResourceAsStream("/ball.png"), false, "png");
+				texture = TextureIO.newTexture(this.getClass().getResourceAsStream("/particlesmoke.tga"), false, "tga");
+				rocket = TextureIO.newTexture(this.getClass().getResourceAsStream("/rocket.png"), false, "png");
+				rocketleftwing = TextureIO.newTexture(this.getClass().getResourceAsStream("/rocketleftwing.png"), false, "png");
+				rocketrightwing = TextureIO.newTexture(this.getClass().getResourceAsStream("/rocketrightwing.png"), false, "png");
+				nextlevel = TextureIO.newTexture(this.getClass().getResourceAsStream("/nextlevel.png"), false, "png");
+				intoinfinity = TextureIO.newTexture(this.getClass().getResourceAsStream("/intoinfinity.png"), false, "png");
+				menuBackground = TextureIO.newTexture(this.getClass().getResourceAsStream("/menuBackground.png"), false, "png");
+				gameoverBackground = TextureIO.newTexture(this.getClass().getResourceAsStream("/gameoverBackground.png"), false, "png");
+				startButton = TextureIO.newTexture(this.getClass().getResourceAsStream("/startgame.png"), false, "png");
+				restartButton = TextureIO.newTexture(this.getClass().getResourceAsStream("/restart.png"), false, "png");
+				startButtonHover = TextureIO.newTexture(this.getClass().getResourceAsStream("/startgame_hover.png"), false, "png");
+				restartButtonHover = TextureIO.newTexture(this.getClass().getResourceAsStream("/restart_hover.png"), false, "png");
+				quitButton = TextureIO.newTexture(this.getClass().getResourceAsStream("/quitgame.png"), false, "png");
+				quitButtonHover = TextureIO.newTexture(this.getClass().getResourceAsStream("/quitgame_hover.png"), false, "png");
+				continueButton = TextureIO.newTexture(this.getClass().getResourceAsStream("/continue.png"), false, "png");
+				continueButtonHover = TextureIO.newTexture(this.getClass().getResourceAsStream("/continue_hover.png"), false, "png");
+				countdown9 = TextureIO.newTexture(this.getClass().getResourceAsStream("/9.png"), false, "png");
+				countdown8 = TextureIO.newTexture(this.getClass().getResourceAsStream("/8.png"), false, "png");
+				countdown7 = TextureIO.newTexture(this.getClass().getResourceAsStream("/7.png"), false, "png");
+				countdown6 = TextureIO.newTexture(this.getClass().getResourceAsStream("/6.png"), false, "png");
+				countdown5 = TextureIO.newTexture(this.getClass().getResourceAsStream("/5.png"), false, "png");
+				countdown4 = TextureIO.newTexture(this.getClass().getResourceAsStream("/4.png"), false, "png");
+				countdown3 = TextureIO.newTexture(this.getClass().getResourceAsStream("/3.png"), false, "png");
+				countdown2 = TextureIO.newTexture(this.getClass().getResourceAsStream("/2.png"), false, "png");
+				countdown1 = TextureIO.newTexture(this.getClass().getResourceAsStream("/1.png"), false, "png");
+				countdown0 = TextureIO.newTexture(this.getClass().getResourceAsStream("/0.png"), false, "png");
+				gameInfo = TextureIO.newTexture(this.getClass().getResourceAsStream("/game_info.png"), false, "png");
+				infoButton = TextureIO.newTexture(this.getClass().getResourceAsStream("/info.png"), false, "png");
+				earthStart = TextureIO.newTexture(this.getClass().getResourceAsStream("/earth.png"), false, "png");
+				mars = TextureIO.newTexture(this.getClass().getResourceAsStream("/mars.png"), false, "png");
+				jupiter = TextureIO.newTexture(this.getClass().getResourceAsStream("/jupiter.png"), false, "png");
+				saturnus = TextureIO.newTexture(this.getClass().getResourceAsStream("/saturnus.png"), false, "png");
+				uranus = TextureIO.newTexture(this.getClass().getResourceAsStream("/uranus.png"), false, "png");
+				neptunus = TextureIO.newTexture(this.getClass().getResourceAsStream("/neptunus.png"), false, "png");
+				pluto = TextureIO.newTexture(this.getClass().getResourceAsStream("/pluto.png"), false, "png");
+				texture5 = TextureIO.newTexture(this.getClass().getResourceAsStream("/star.png"), false, "png");
+				texture6 = TextureIO.newTexture(this.getClass().getResourceAsStream("/meteor.png"), false, "png");
+				explosion = TextureIO.newTexture(this.getClass().getResourceAsStream("/explosion.png"), false, "png");
+				spark = TextureIO.newTexture(this.getClass().getResourceAsStream("/spark.png"), false, "png");
+				gameover = TextureIO.newTexture(this.getClass().getResourceAsStream("/gameover.png"), false, "png");
+				redgameover = TextureIO.newTexture(this.getClass().getResourceAsStream("/gameover_red.png"), false, "png");
+				repairkit = TextureIO.newTexture(this.getClass().getResourceAsStream("/repairkit.png"), false, "png");
 			} catch (GLException | IOException e) {
 				e.printStackTrace();
 				System.exit(-1);
@@ -103,6 +145,24 @@ public class Core {
         		
 	}
 	
+	public void drawBall(GLAutoDrawable drawable, float x, float y, float w, float h) {
+		GL2 gl = drawable.getGL().getGL2();
+		
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+		ball.enable(gl);
+		ball.bind(gl);
+        gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE); 
+			gl.glBegin(GL2.GL_QUADS);
+			gl.glColor3f(1, 1, 1);
+				gl.glTexCoord2f(0, 1);	gl.glVertex2f(x, y);
+				gl.glTexCoord2f(1, 1);	gl.glVertex2f(x + w, y);
+				gl.glTexCoord2f(1, 0);	gl.glVertex2f(x + w, y + h);
+				gl.glTexCoord2f(0, 0);	gl.glVertex2f(x, y + h);
+			gl.glEnd();
+			ball.disable(gl);	
+	}
+	
 	public void drawMenuBackground(GLAutoDrawable drawable, float x, float y, float w, float h) {
 		GL2 gl = drawable.getGL().getGL2();
 		
@@ -119,6 +179,24 @@ public class Core {
 				gl.glTexCoord2f(0, 0);	gl.glVertex2f(x, y + h);
 			gl.glEnd();
 			menuBackground.disable(gl);	
+	}
+	
+	public void drawGameOverBackground(GLAutoDrawable drawable, float x, float y, float w, float h, float fade) {
+		GL2 gl = drawable.getGL().getGL2();
+		
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+		gameoverBackground.enable(gl);
+		gameoverBackground.bind(gl);
+        gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE); 
+			gl.glBegin(GL2.GL_QUADS);
+			gl.glColor4f(1.0f, 1.0f, 1.0f, fade);
+				gl.glTexCoord2f(0, 1);	gl.glVertex2f(x, y);
+				gl.glTexCoord2f(1, 1);	gl.glVertex2f(x + w, y);
+				gl.glTexCoord2f(1, 0);	gl.glVertex2f(x + w, y + h);
+				gl.glTexCoord2f(0, 0);	gl.glVertex2f(x, y + h);
+			gl.glEnd();
+			gameoverBackground.disable(gl);	
 	}
 	
 	public void drawStartButton(GLAutoDrawable drawable, float x, float y, float w, float h) {
@@ -173,6 +251,42 @@ public class Core {
 				gl.glTexCoord2f(0, 0);	gl.glVertex2f(x, y + h);
 			gl.glEnd();
 			quitButton.disable(gl);	
+	}
+	
+	public void drawReStartButton(GLAutoDrawable drawable, float x, float y, float w, float h, float fade) {
+		GL2 gl = drawable.getGL().getGL2();
+		
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+		restartButton.enable(gl);
+		restartButton.bind(gl);
+        gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE); 
+			gl.glBegin(GL2.GL_QUADS);
+			gl.glColor4f(1.0f, 1.0f, 1.0f, fade);
+				gl.glTexCoord2f(0, 1);	gl.glVertex2f(x, y);
+				gl.glTexCoord2f(1, 1);	gl.glVertex2f(x + w, y);
+				gl.glTexCoord2f(1, 0);	gl.glVertex2f(x + w, y + h);
+				gl.glTexCoord2f(0, 0);	gl.glVertex2f(x, y + h);
+			gl.glEnd();
+			restartButton.disable(gl);	
+	}
+	
+	public void drawReStartButtonHover(GLAutoDrawable drawable, float x, float y, float w, float h, float fade) {
+		GL2 gl = drawable.getGL().getGL2();
+		
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+		restartButtonHover.enable(gl);
+		restartButtonHover.bind(gl);
+        gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE); 
+			gl.glBegin(GL2.GL_QUADS);
+			gl.glColor4f(1.0f, 1.0f, 1.0f, fade);
+				gl.glTexCoord2f(0, 1);	gl.glVertex2f(x, y);
+				gl.glTexCoord2f(1, 1);	gl.glVertex2f(x + w, y);
+				gl.glTexCoord2f(1, 0);	gl.glVertex2f(x + w, y + h);
+				gl.glTexCoord2f(0, 0);	gl.glVertex2f(x, y + h);
+			gl.glEnd();
+			restartButtonHover.disable(gl);	
 	}
 	
 	public void drawQuitButtonHover(GLAutoDrawable drawable, float x, float y, float w, float h) {
@@ -470,14 +584,14 @@ public class Core {
 			texture5.disable(gl);	
 	}
 	
-	public void drawMeteor(GLAutoDrawable drawable, float x, float y, float w, float h, float rot) {
+	public void drawMeteor(GLAutoDrawable drawable, float x, float y, float w, float h) {
 		GL2 gl = drawable.getGL().getGL2();
 		
-		gl.glMatrixMode(GL_MODELVIEW);
-		gl.glPushMatrix();
-		gl.glTranslatef(x, y, 0.0f);
-		gl.glRotatef(rot, 0f, 0f, 1.0f);
-		gl.glTranslatef(-x, -y, -0.0f);
+//		gl.glMatrixMode(GL_MODELVIEW);
+//		gl.glPushMatrix();
+//		gl.glTranslatef(x, y, 0.0f);
+//		gl.glRotatef(rot, 0f, 0f, 1.0f);
+//		gl.glTranslatef(-x, -y, -0.0f);
 		gl.glEnable(GL.GL_BLEND);
 		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 		texture6.enable(gl);
@@ -499,8 +613,8 @@ public class Core {
 		
 		gl.glEnable(GL.GL_BLEND);
 		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-		texture1.enable(gl);
-		texture1.bind(gl);
+		rocket.enable(gl);
+		rocket.bind(gl);
         gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE); 
 			gl.glBegin(GL2.GL_QUADS);
 			gl.glColor4f(color[0], color[1], color[2], color[3]);
@@ -509,16 +623,16 @@ public class Core {
 				gl.glTexCoord2f(1, 0);	gl.glVertex2f(x + w, y + h);
 				gl.glTexCoord2f(0, 0);	gl.glVertex2f(x, y + h);
 			gl.glEnd();
-			texture1.disable(gl);	
+			rocket.disable(gl);	
 	}
 	
-	public void drawRocketLeft(GLAutoDrawable drawable, float x, float y, float w, float h, float[] color) {
+	public void drawRocketRightWing(GLAutoDrawable drawable, float x, float y, float w, float h, float[] color) {
 		GL2 gl = drawable.getGL().getGL2();
-		
+
 		gl.glEnable(GL.GL_BLEND);
 		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-		texture2.enable(gl);
-		texture2.bind(gl);
+		rocketrightwing.enable(gl);
+		rocketrightwing.bind(gl);
         gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE); 
 			gl.glBegin(GL2.GL_QUADS);
 			gl.glColor4f(color[0], color[1], color[2], color[3]);
@@ -527,16 +641,16 @@ public class Core {
 				gl.glTexCoord2f(1, 0);	gl.glVertex2f(x + w, y + h);
 				gl.glTexCoord2f(0, 0);	gl.glVertex2f(x, y + h);
 			gl.glEnd();
-			texture2.disable(gl);	
+			rocketrightwing.disable(gl);	
 	}
 	
-	public void drawRocketRight(GLAutoDrawable drawable, float x, float y, float w, float h, float[] color) {
+	public void drawRocketLeftWing(GLAutoDrawable drawable, float x, float y, float w, float h, float[] color) {
 		GL2 gl = drawable.getGL().getGL2();
-		
+
 		gl.glEnable(GL.GL_BLEND);
 		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-		texture3.enable(gl);
-		texture3.bind(gl);
+		rocketleftwing.enable(gl);
+		rocketleftwing.bind(gl);
         gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE); 
 			gl.glBegin(GL2.GL_QUADS);
 			gl.glColor4f(color[0], color[1], color[2], color[3]);
@@ -545,7 +659,7 @@ public class Core {
 				gl.glTexCoord2f(1, 0);	gl.glVertex2f(x + w, y + h);
 				gl.glTexCoord2f(0, 0);	gl.glVertex2f(x, y + h);
 			gl.glEnd();
-			texture3.disable(gl);	
+			rocketleftwing.disable(gl);	
 	}
 	
 	public void drawSmoke(GLAutoDrawable drawable, float x, float y, float w, float h, float color[]) {
@@ -621,5 +735,234 @@ public class Core {
 				gl.glTexCoord2f(0, 0);	gl.glVertex2f(x, y + h);
 			gl.glEnd();
 			jupiter.disable(gl);	
+	}
+	
+	public void drawSaturnus(GLAutoDrawable drawable, float x, float y, float w, float h) {
+		GL2 gl = drawable.getGL().getGL2();
+		
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+		saturnus.enable(gl);
+		saturnus.bind(gl);
+        gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE); 
+			gl.glBegin(GL2.GL_QUADS);
+			gl.glColor3f(1, 1, 1);
+				gl.glTexCoord2f(0, 1);	gl.glVertex2f(x, y);
+				gl.glTexCoord2f(1, 1);	gl.glVertex2f(x + w, y);
+				gl.glTexCoord2f(1, 0);	gl.glVertex2f(x + w, y + h);
+				gl.glTexCoord2f(0, 0);	gl.glVertex2f(x, y + h);
+			gl.glEnd();
+			saturnus.disable(gl);	
+	}
+	
+	public void drawUranus(GLAutoDrawable drawable, float x, float y, float w, float h) {
+		GL2 gl = drawable.getGL().getGL2();
+		
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+		uranus.enable(gl);
+		uranus.bind(gl);
+        gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE); 
+			gl.glBegin(GL2.GL_QUADS);
+			gl.glColor3f(1, 1, 1);
+				gl.glTexCoord2f(0, 1);	gl.glVertex2f(x, y);
+				gl.glTexCoord2f(1, 1);	gl.glVertex2f(x + w, y);
+				gl.glTexCoord2f(1, 0);	gl.glVertex2f(x + w, y + h);
+				gl.glTexCoord2f(0, 0);	gl.glVertex2f(x, y + h);
+			gl.glEnd();
+			uranus.disable(gl);	
+	}
+	
+	public void drawNeptunus(GLAutoDrawable drawable, float x, float y, float w, float h) {
+		GL2 gl = drawable.getGL().getGL2();
+		
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+		neptunus.enable(gl);
+		neptunus.bind(gl);
+        gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE); 
+			gl.glBegin(GL2.GL_QUADS);
+			gl.glColor3f(1, 1, 1);
+				gl.glTexCoord2f(0, 1);	gl.glVertex2f(x, y);
+				gl.glTexCoord2f(1, 1);	gl.glVertex2f(x + w, y);
+				gl.glTexCoord2f(1, 0);	gl.glVertex2f(x + w, y + h);
+				gl.glTexCoord2f(0, 0);	gl.glVertex2f(x, y + h);
+			gl.glEnd();
+			neptunus.disable(gl);	
+	}
+	
+	public void drawPluto(GLAutoDrawable drawable, float x, float y, float w, float h) {
+		GL2 gl = drawable.getGL().getGL2();
+		
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+		pluto.enable(gl);
+		pluto.bind(gl);
+        gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE); 
+			gl.glBegin(GL2.GL_QUADS);
+			gl.glColor3f(1, 1, 1);
+				gl.glTexCoord2f(0, 1);	gl.glVertex2f(x, y);
+				gl.glTexCoord2f(1, 1);	gl.glVertex2f(x + w, y);
+				gl.glTexCoord2f(1, 0);	gl.glVertex2f(x + w, y + h);
+				gl.glTexCoord2f(0, 0);	gl.glVertex2f(x, y + h);
+			gl.glEnd();
+			pluto.disable(gl);	
+	}
+	
+	public void drawExplosion(GLAutoDrawable drawable, float x, float y, float w, float h, int frame) {
+		GL2 gl = drawable.getGL().getGL2();
+		
+		float col = frame % 4;
+		float row = frame / 4;
+		
+		row = row / 8;
+		row = 1 - row;
+		
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+		explosion.enable(gl);
+		explosion.bind(gl);
+        gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE); 
+			gl.glBegin(GL2.GL_QUADS);
+			gl.glTexCoord2f(col/4, row);						gl.glVertex3f(x, y, 0.0f);
+			gl.glTexCoord2f((1+col)/4, row);					gl.glVertex3f(x + w, y, 0.0f);
+			gl.glTexCoord2f((1+col)/4, 0.125f+row);				gl.glVertex3f(x + w, y + h, 0.0f);
+			gl.glTexCoord2f(col/4, 0.125f+row);					gl.glVertex3f(x, y + h, 0.0f);
+			gl.glEnd();
+			explosion.disable(gl);	
+	}
+	
+	public void drawSpark(GLAutoDrawable drawable, float x, float y, float w, float h) {
+		GL2 gl = drawable.getGL().getGL2();
+		
+		gl.glEnable(GL.GL_BLEND);
+		spark.enable(gl);
+		spark.bind(gl);
+			gl.glBegin(GL2.GL_QUADS);
+			gl.glColor3f(1, 1, 1);
+				gl.glTexCoord2f(0, 1);	gl.glVertex2f(x, y);
+				gl.glTexCoord2f(1, 1);	gl.glVertex2f(x + w, y);
+				gl.glTexCoord2f(1, 0);	gl.glVertex2f(x + w, y + h);
+				gl.glTexCoord2f(0, 0);	gl.glVertex2f(x, y + h);
+			gl.glEnd();
+		spark.disable(gl);	
+	}
+	
+	public void drawGameOver(GLAutoDrawable drawable, float x, float y, float w, float h, float fade) {
+		GL2 gl = drawable.getGL().getGL2();
+		
+		gl.glEnable(GL.GL_BLEND);
+		gameover.enable(gl);
+		gameover.bind(gl);
+			gl.glBegin(GL2.GL_QUADS);
+			gl.glColor4f(1.0f, 1.0f, 1.0f, fade);
+				gl.glTexCoord2f(0, 1);	gl.glVertex2f(x, y);
+				gl.glTexCoord2f(1, 1);	gl.glVertex2f(x + w, y);
+				gl.glTexCoord2f(1, 0);	gl.glVertex2f(x + w, y + h);
+				gl.glTexCoord2f(0, 0);	gl.glVertex2f(x, y + h);
+			gl.glEnd();
+		gameover.disable(gl);	
+	}
+	
+	public void drawNextLevel(GLAutoDrawable drawable, float x, float y, float w, float h, float fade) {
+		GL2 gl = drawable.getGL().getGL2();
+		
+		gl.glEnable(GL.GL_BLEND);
+		nextlevel.enable(gl);
+		nextlevel.bind(gl);
+			gl.glBegin(GL2.GL_QUADS);
+			gl.glColor4f(1.0f, 1.0f, 1.0f, fade);
+				gl.glTexCoord2f(0, 1);	gl.glVertex2f(x, y);
+				gl.glTexCoord2f(1, 1);	gl.glVertex2f(x + w, y);
+				gl.glTexCoord2f(1, 0);	gl.glVertex2f(x + w, y + h);
+				gl.glTexCoord2f(0, 0);	gl.glVertex2f(x, y + h);
+			gl.glEnd();
+			nextlevel.disable(gl);	
+	}
+	
+	public void drawIntoInfinity(GLAutoDrawable drawable, float x, float y, float w, float h, float fade) {
+		GL2 gl = drawable.getGL().getGL2();
+		
+		gl.glEnable(GL.GL_BLEND);
+		intoinfinity.enable(gl);
+		intoinfinity.bind(gl);
+			gl.glBegin(GL2.GL_QUADS);
+			gl.glColor4f(1.0f, 1.0f, 1.0f, fade);
+				gl.glTexCoord2f(0, 1);	gl.glVertex2f(x, y);
+				gl.glTexCoord2f(1, 1);	gl.glVertex2f(x + w, y);
+				gl.glTexCoord2f(1, 0);	gl.glVertex2f(x + w, y + h);
+				gl.glTexCoord2f(0, 0);	gl.glVertex2f(x, y + h);
+			gl.glEnd();
+			intoinfinity.disable(gl);	
+	}
+	
+	public void drawRedGameOver(GLAutoDrawable drawable, float x, float y, float w, float h, float fade) {
+		GL2 gl = drawable.getGL().getGL2();
+		
+		gl.glEnable(GL.GL_BLEND);
+		redgameover.enable(gl);
+		redgameover.bind(gl);
+			gl.glBegin(GL2.GL_QUADS);
+			gl.glColor4f(1.0f, 1.0f, 1.0f, fade);
+				gl.glTexCoord2f(0, 1);	gl.glVertex2f(x, y);
+				gl.glTexCoord2f(1, 1);	gl.glVertex2f(x + w, y);
+				gl.glTexCoord2f(1, 0);	gl.glVertex2f(x + w, y + h);
+				gl.glTexCoord2f(0, 0);	gl.glVertex2f(x, y + h);
+			gl.glEnd();
+		redgameover.disable(gl);	
+	}
+	
+	public void drawRepairKit(GLAutoDrawable drawable, float x, float y, float w, float h) {
+		GL2 gl = drawable.getGL().getGL2();
+		
+		gl.glEnable(GL.GL_BLEND);
+		repairkit.enable(gl);
+		repairkit.bind(gl);
+			gl.glBegin(GL2.GL_QUADS);
+			gl.glColor3f(1, 1, 1);
+				gl.glTexCoord2f(0, 1);	gl.glVertex2f(x, y);
+				gl.glTexCoord2f(1, 1);	gl.glVertex2f(x + w, y);
+				gl.glTexCoord2f(1, 0);	gl.glVertex2f(x + w, y + h);
+				gl.glTexCoord2f(0, 0);	gl.glVertex2f(x, y + h);
+			gl.glEnd();
+		repairkit.disable(gl);	
+	}
+	
+	public void playRocketDestroyed(){
+		try {
+		    InputStream is = this.getClass().getResourceAsStream("/explode.wav");  
+		 
+		    AudioStream audioStream = new AudioStream(is);
+		 
+		    AudioPlayer.player.start(audioStream);
+		} catch (GLException | IOException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
+	}
+	
+	public void playWingDestroyed(){
+		try {
+		    InputStream is = this.getClass().getResourceAsStream("/winggone.wav");  
+		 
+		    AudioStream audioStream = new AudioStream(is);
+		 
+		    AudioPlayer.player.start(audioStream);
+		} catch (GLException | IOException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
+	}
+	
+	public void playRepair(){
+		try {
+		    InputStream is = this.getClass().getResourceAsStream("/repair.wav");  
+
+		    AudioStream audioStream = new AudioStream(is);
+		    AudioPlayer.player.start(audioStream);
+		} catch (GLException | IOException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
 	}
 }

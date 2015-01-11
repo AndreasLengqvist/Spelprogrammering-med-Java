@@ -9,7 +9,6 @@ import javax.media.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
 import view.Input;
 import view.View;
-import model.Model;
 import controller.Controller;
 
 
@@ -17,7 +16,6 @@ import controller.Controller;
 public class Init implements GLEventListener {
 
 	private View view;
-	private Model model;
 	private Input input;
 	private Controller controller;
 	private long previousTime;
@@ -26,10 +24,9 @@ public class Init implements GLEventListener {
 	
 	
 	public Init(GLCanvas c) throws Exception{
-		model = new Model();
     	input = new Input();
-    	view = new View(model, width, height, input);
-    	controller = new Controller(model, view);
+    	view = new View(width, height, input);
+    	controller = new Controller(view);
 		
 		
     	c.addMouseListener(input);

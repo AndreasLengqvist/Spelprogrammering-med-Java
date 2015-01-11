@@ -9,7 +9,7 @@ import javax.media.opengl.GLAutoDrawable;
 public class StarSystem {
 	
 	private StarParticle particles[];
-	private static int MAX_PARTICLES = 300;	
+	private static int MAX_PARTICLES = 200;	
 	
 	
 	public StarSystem(){
@@ -19,8 +19,8 @@ public class StarSystem {
 		}
 	}
 	
-	public void render(GLAutoDrawable drawable, Core core, float timeElapsed, Camera camera) {
-		update(timeElapsed);
+	public void render(GLAutoDrawable drawable, Core core, float timeElapsed, Camera camera, float starSpeed) {
+		update(timeElapsed, starSpeed);
 		draw(drawable, core, camera);
 	}
 
@@ -30,10 +30,10 @@ public class StarSystem {
 		}
 	}
 
-	private void update(float timeElapsed) {
+	private void update(float timeElapsed, float starSpeed) {
 		for(int i = 0; i < MAX_PARTICLES; i++){
 			if(particles[i].isAlive()){
-				particles[i].update(timeElapsed);
+				particles[i].update(timeElapsed, starSpeed);
 			}
 			else {	
 				particles[i].respawn();

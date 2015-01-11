@@ -14,6 +14,7 @@ public class Input implements MouseListener, MouseMotionListener, KeyListener {
 	private boolean mouseWasReleased = false;
 	private Point mousePos = new Point(0,0);
 	private char keyReleased = 0;
+	public int keyPressed;
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
@@ -44,7 +45,8 @@ public class Input implements MouseListener, MouseMotionListener, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
-		
+		this.keyPressed = arg0.getKeyCode();
+		System.out.println(keyPressed);
 	}
 
 	@Override

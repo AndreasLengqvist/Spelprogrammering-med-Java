@@ -26,8 +26,8 @@ public class SmokeParticle {
 	private float delayTimeSeconds;
 	
 	private static float minSize = 0.0f;
-	private static float maxSize = 0.1f;
-	private static float minFade = 1.0f;
+	private static float maxSize = 0.15f;
+	private static float minFade = 1.5f;
 	private static float maxFade = 0.0f;
 
 	
@@ -88,8 +88,8 @@ public class SmokeParticle {
 
 	public void draw(GLAutoDrawable drawable, Core core, Camera camera) {
 
-			float viewX = camera.toViewCoord(x);
-			float viewY = camera.toViewCoord(y+0.055f);
+			float viewX = camera.toViewCoord(x+0.01f);
+			float viewY = camera.toViewCoord(y+0.1f);
 			float viewSize = camera.toViewCoord(size);
 			 
 			float color[] = new float[4];

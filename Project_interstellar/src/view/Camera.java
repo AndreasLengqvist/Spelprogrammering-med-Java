@@ -1,20 +1,20 @@
 package view;
 
 
-
+/*
+ *  Handles the dimensions and other scaleable things.
+ */
 public class Camera {
 
 	private float boardWith;
 	private float boardHeight;
 	private float scale;
-	private int borderSize = 5;
 
 	
 	public Camera(float boardWidth, float boardHeight) {
 		this.boardWith = boardWidth;
 		this.boardHeight = boardHeight;
 	}
-
 	
 	public void setDimensions(int width, int height) {
 		float scaleX = width / boardWith;
@@ -25,7 +25,6 @@ public class Camera {
 			scale = scaleY;
 		}		
 	}
-	
 	
 	public float toViewCoord(float i) {
 		return i * scale;

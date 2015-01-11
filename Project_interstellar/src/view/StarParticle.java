@@ -18,13 +18,16 @@ public class StarParticle {
 	
 	// Direction.
 	private float yi;
-	private float xi;
+	
+	// Variable that has different value as in the menu or in a game and level.
+	private float starSpeed;
 	
 	// Size.
 	private float size;
 	
-	// Max position for Y coordinate. Re spawn on higher.
+	// Max position for Y coordinate. Respawn on higher.
 	private float maxY = 1.1f;
+	private float boost;
 
 	public StarParticle(){
 		Random rand = new Random();
@@ -42,17 +45,24 @@ public class StarParticle {
 
 		// Set Starting X-position.
 		this.x = 0.0f + (float)(Math.random() * ((1.5f - 0.0f) + 1.0f));
-
+		
 		// Set random direction.
-		this.yi = rand.nextInt(100 - 0 + 1)*0.0005f;
-
+		this.yi = rand.nextInt(100 - 0 + 1);
+		
+		if(yi < 0.000001f){
+			yi += 0.001f;
+		}
+		
 		// Reset size.
 		this.size = rand.nextFloat()*0.01f;
 	}
 	
-	public void update(float timeElapsed){
-		yi = yi + timeElapsed * 0.005f;
-		y = y + timeElapsed * yi;
+	public void update(float timeElapsed, float starSpeed){
+		this.starSpeed = starSpeed;
+		y = y + (timeElapsed * (yi*starSpeed)) + boost;
+		if(y < 0.0f){
+			Math.abs(y);
+		}
 	}
 	
 	// Respawn control.
