@@ -1,4 +1,4 @@
-# Grundläggande spelprogrammering i Java - HT2014
+# Grundläggande spelprogrammering - HT2014
 
 Kursen i grundläggande spelprogrammering syftade till att ge mig en första inblick i spelprogrammering men även en solid grund att bygga dator/tv/mobil-spel och andra interaktiva applikationer på. <br>
 Kursen var i sig programspråks och plattforms-oberoende. De flesta valde att utföra kursen i C# som vi tidigare läst, men jag ville istället testa på något nytt så kortet föll på Java. <br>
